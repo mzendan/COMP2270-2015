@@ -1110,6 +1110,7 @@ Lab 4.
 
 ----
 cd ~/COMP2270-2015
+git checkout -- circuits/cpu-16bit.circ
 git pull upstream master
 git checkout --theirs circuits/cpu-16bit.circ
 git add circuits/cpu-16bit.circ
@@ -1190,6 +1191,166 @@ If you saved your work somewhere else, be sure to stage (`git add` the file).
 
 == October 27
 
+=== Miscellaneous stuff
+
+* Fix the store instruction
+* Using the store instruction
+* If you're crazy, use store to modify code
+* I/O devices
+
+=== CPU project
+
+Build a CPU in Logisim and test it with machine code.
+
+The CPU should be programmable, but the data and program do not need to share the RAM.
+That is, the program could be in a separate ROM (read only memory) to simplify things.
+
+=== Terrible activity
+
+Goal: find a partner or partners.
+
+Ideally, work in pairs.
+Working on this individually is *very* challenging and not recommended.
+Groups of 3 are okay, but larger groups are not recommended.
+
+Speed dating
+
 == October 29
 
+=== Repository setup
+
+Goal: Set up your repository.
+
+. Everybody on your team: https://gitlab.com/projects/new[Create a private repository for your CPU]
+. Copy the SSH clone URL from the web site and do this:
+
+        cd
+        git clone SSH_URL_FROM_GITLAB_BUT_DONT_TYPE_THIS_IN_LITERALLY
+
+. Add `lawrancej` as a `Developer` collaborator (Members -> Add members)
+. Add each of your friend(s) as `Developer` (not `Guest`) collaborators to your Gitlab repository.
+. Add your friend(s) SSH urls to git.
+
+		git remote add myFriendBob ssh_url_to_my_friend_bobs_rep_url_dont_type_this_literally
+        git fetch --all
+
+=== Overview
+
+Goal: Decide on the parameters of your http://en.wikipedia.org/wiki/Central_processing_unit[CPU].
+
+You may work on an existing CPU, including the one I supplied, but in that case,
+you need to clearly explain what you did to improve it.
+The best way to do this is to commit the existing CPU in your repository first
+and explain that it is your starting point.
+
+Example CPUs include:
+
+* http://minnie.tuhs.org/Programs/UcodeCPU/index.html[UcodeCPU]
+* http://minnie.tuhs.org/CompArch/Tutes/week03.html[Tutes]
+* http://dl.acm.org/citation.cfm?id=2445196.2445296&coll=DL&dl=ACM&CFID=725866919&CFTOKEN=92187912[Simple CPU]
+* https://github.com/briandef/bf16[Brainfuck]
+
+Answer these questions, but remember, you will need to write a demonstration program for this CPU.
+The easier it is to implement the CPU, the harder it may be to write demonstration code.
+
+==== Architecture
+
+http://en.wikipedia.org/wiki/Comparison_of_instruction_set_architectures[What kind of architecture is it?]
+Is this CPU a Harvard architecture or von Neumann architecture?
+
+NOTE: A Harvard architecture CPU (where program is in ROM and data is in RAM) is
+simpler to implement with few (if any) consequences on machine code complexity.
+
+==== Instructions
+
+Decide on an http://en.wikipedia.org/wiki/Instruction_set[instruction set].
+
+Examples:
+
+* https://en.wikipedia.org/wiki/CHIP-8[CHIP-8]
+* https://en.wikipedia.org/wiki/Brainfuck[Brainfuck]
+
+The CPU *must* support at minimum: conditional jumps, arithmetic, logic, and loading and storing data to RAM.
+Examples include: Brainfuck, http://www.bigmessowires.com/nibbler/[Nibbler], 6502, http://jasmin.sourceforge.net/[jvm]
+
+* How many instructions do you plan to implement?
+* What are they? (Keep in mind, some machines only implement a handful of instructions)
+* What is the maximum number of operands an instruction may have? (Usually, this is no more than 3)
+* How many bits will you use to encode each instruction?
+* Are instructions a fixed width? (It is far easier for it to be fixed width, btw)
+
+==== Registers
+
+How wide are the registers? 8 bits? 16 bits? 32 bits?
+
+How many registers do you plan to implement in the register file?
+At a minimum, you will need a register to point to the current instruction (the program counter),
+and a register to store the current instruction.
+You will likely need a register to store the current microcode instruction and program counter.
+In addition, you will need registers to store data.
+
+Machines without a register file exist: they use stacks instead (see http://jasmin.sourceforge.net/about.html[JVM assembly]).
+Obviously, a register is still necessary to keep track of where we are in the stack, but in a "stack machine" the register isn't referenced directly as an operand.
+Instead, push and pop operations implicitly change the stack register.
+
+Supporting multiple registers arguably simplifies machine coding, but large register files are tedious to implement.
+
+==== Hints
+
+Start with some existing CPU and modify it to work better in some meaningful way.
+
+Example improvements:
+
+Squeeze out instructions::
+* Remove some existing instruction to make room for better ones
+
+Modify instructions::
+* Replace LOAD Rd with LOAD Rd, Ra: Rd = RAM[Ra]
+* Split comparison from jump:
+** CMPEQ Ra Rb (set a 1-bit test flag register to Ra == Rb)
+** CMPLT Ra Rb (set a 1-bit test flag register to Ra < Rb)
+** JMP imm (jump to immediate if test flag is set)
+
+Memory-mapped I/O::
+* Loading from a special memory address reads from the keyboard buffer
+* Storing to a special memory address writes to the tty (screen)
+
+Fix reset::
+* Allow the reset button to also reset the phase of the CPU
+
 == October 30
+
+* Introduction to tunnels, logisim libraries, probes, bit extenders.
+* Research CPUs to implement or expand upon, and figure out how to break a CPU into its constituent parts (ALU, register file, control unit, etc.).
+
+== November 3
+
+* CPU data path
+* RISC vs CISC vs VLIW
+* https://en.wikipedia.org/wiki/Flynn's_taxonomy[Flynn's taxonomy]
+
+== November 5
+
+BF CPU building walk-through
+
+== November 6
+
+BF CPU building walk-through (continued)
+
+== November 10
+
+BF CPU building walk-through (continued)
+
+== November 12
+
+BF CPU building walk-through (continued)
+
+== November 24
+
+Final exam schedule
+
+----
+COMP2270-05 	Lawrance J 	12/4/2015 	10:15AM-12:15PM 	DOBBS 310  
+COMP2270-07 	Lawrance J 	12/8/2015 	10:15AM-12:15PM 	WILLS 103
+----
+
