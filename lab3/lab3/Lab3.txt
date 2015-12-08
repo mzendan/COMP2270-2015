@@ -1,0 +1,53 @@
+Maximum
+
+1.  "High level" source       	"Low level" source            Assembly 
+	int a = RAM[0x80]       R1 = 0x80;                  MOV R1,0x80
+	int b = RAM[0x81]       R2 = 0x81;                  MOV R2,0x081
+	int max = a;            R3 = R1 + R0;		    ADD R3,R1,R0
+	if (b > a) {            R4 = R2 - R1;		    SUB R4,R2,R1
+    max = b;                   	if(R4 < 0) goto 0x06	    JZL R4,0x06
+	}                       R3 = R2 + R0;		    ADD R3,R2,R0
+
+2. Machine code 
+	7180
+	7281
+	0310
+	1421
+	b406
+	0320
+	
+
+
+Sum
+
+1.	"High level" source						
+	int sum(int length, int *array) {		
+    int result = 0;							
+    while (length > 0) { 					
+	    result += *array; 					
+        array++;          					
+        length--;         					
+    }										
+    return result;							
+
+2.	"Low level" source			Assembly 
+	R1 = 0x03  				MOV R1,0x03
+	R2 = 0x01 				MOV R2,0x01
+	R4 = 0x16				MOV R4,0x16
+	R3 = RAM[0x16]				STOR R3,0x16
+	R4 = R1 - R0 				SUB R4,R1,R0
+	if(R4 == 0) goto 0x09			JZE R4,0x09
+	R2 = R2 + R3				ADD R2,R2,R3
+	R1 = R3 + R0				ADD R1,R3,R0
+	if(R0 == 0) goto 0x04			JZE R0,0x04
+	
+ 3.	Machine code
+	7103
+	7201
+	7416
+	e316
+	1410
+	8409
+	0223
+	0130
+	8004
